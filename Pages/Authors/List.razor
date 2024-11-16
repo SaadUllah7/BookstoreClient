@@ -1,0 +1,100 @@
+﻿@page "/authors"
+@using GraphQL.Client.Abstractions
+@inject IGraphQLClient GraphQLClient
+@inject NavigationManager Navigation
+
+<h3>Auhtors</h3>
+<p>@Message</p>
+@if (_authors == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <button @onclick=GoToAddNewAuthor>Add new Author</button>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+             @foreach (var auth in _authors)
+            {
+                <tr>
+                    <td>@auth.Id</td>
+                    <td>@auth.Name</td>
+                    <td>
+                        <button @onclick="() => GotoEdit(auth.Id)">Edit</button>
+                        <button @onclick="() => DeleteAuthor(auth.Id)">Delete</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+}
+
+@code {
+    private List<Author>? _authors;
+    private string Message = string.Empty;
+    protected override async Task OnInitializedAsync()
+    {
+        await FetchAuthors();
+    }
+
+    public void GoToAddNewAuthor(){
+        
+        Navigation.NavigateTo("/add-author");
+    }
+
+    private void GotoEdit(int id)
+    {
+        Navigation.NavigateTo($"/edit-author/{id}");
+    }
+
+    private async Task FetchAuthors(){
+        var request = new GraphQLRequest
+        {
+            Query = @"
+                query GetAuthors {
+                    authors {
+                        id
+                        name
+                    }
+                }"
+        };
+
+        var response = await GraphQLClient.SendQueryAsync<AuthorResponse>(request);
+        _authors = response.Data.Authors;
+    }
+    private async Task DeleteAuthor(int id)
+    {
+        var request = new GraphQLRequest
+            {
+                Query = @"
+                        mutation DeleteAuthor($id: Int!) {
+                            deleteAuthor(authorId: $id)
+                        }",
+                Variables = new { id = id }
+            };
+
+        var response = await GraphQLClient.SendMutationAsync<GraphQLResponse<bool>>(request);
+
+        if (response.Errors != null)
+        {
+            Message = $"Failed to add Author. Error: {response.Errors.FirstOrDefault().Message}";
+        }
+        else
+        {
+            Message = $"Author #'{id}' delete successfully!";
+            await FetchAuthors();
+        }
+    }
+
+    public class AuthorResponse
+    {
+        public List<Author> Authors { get; set; }
+    }
+}

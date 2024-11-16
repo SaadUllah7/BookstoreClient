@@ -1,0 +1,85 @@
+{
+  "format": 1,
+  "restore": {
+    "/Users/saadullah/Projects/POCGraphQLWithBlazor/BookstoreClient/BookstoreClient.csproj": {}
+  },
+  "projects": {
+    "/Users/saadullah/Projects/POCGraphQLWithBlazor/BookstoreClient/BookstoreClient.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/saadullah/Projects/POCGraphQLWithBlazor/BookstoreClient/BookstoreClient.csproj",
+        "projectName": "BookstoreClient",
+        "projectPath": "/Users/saadullah/Projects/POCGraphQLWithBlazor/BookstoreClient/BookstoreClient.csproj",
+        "packagesPath": "/Users/saadullah/.nuget/packages/",
+        "outputPath": "/Users/saadullah/Projects/POCGraphQLWithBlazor/BookstoreClient/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/saadullah/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "dependencies": {
+            "GraphQL.Client": {
+              "target": "Package",
+              "version": "[6.1.0, )"
+            },
+            "GraphQL.Client.Serializer.Newtonsoft": {
+              "target": "Package",
+              "version": "[6.1.0, )"
+            },
+            "Microsoft.AspNetCore.Components.WebAssembly": {
+              "target": "Package",
+              "version": "[7.0.15, )"
+            },
+            "Microsoft.AspNetCore.Components.WebAssembly.DevServer": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[7.0.15, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.405/RuntimeIdentifierGraph.json"
+        }
+      },
+      "runtimes": {
+        "browser-wasm": {
+          "#import": []
+        }
+      }
+    }
+  }
+}

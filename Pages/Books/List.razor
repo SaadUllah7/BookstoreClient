@@ -1,0 +1,109 @@
+﻿@page "/books"
+@using GraphQL.Client.Abstractions
+@inject IGraphQLClient GraphQLClient
+@inject NavigationManager Navigation
+
+<h3>Books</h3>
+
+<p>@Message</p>
+
+@if (Books == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <button @onclick=GoToAddNewBook>Add new Book</button>
+    <table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var book in Books)
+            {
+                <tr>
+                    <td>@book.Id</td>
+                    <td>@book.Title</td>
+                    <td>@book.AuthorName</td>
+                    
+                    <td> 
+                        <button @onclick="() => GotoEdit(book.Id)">Edit</button>
+                        <button @onclick="() => DeleteBook(book.Id)">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+}
+
+@code {
+    private List<Book>? Books;
+    private string Message = string.Empty;
+    protected override async Task OnInitializedAsync()
+    {
+        await FetchBooks();
+    }
+
+    public void GoToAddNewBook()
+    {
+
+        Navigation.NavigateTo("/add-book");
+    }
+
+    private async Task FetchBooks()
+    {
+        var request = new GraphQLRequest
+            {
+                Query = @"
+                    query GetBooks {
+                        books {
+                        id
+                        title
+                        authorName
+                        }
+                    }"
+            };
+
+        var response = await GraphQLClient.SendQueryAsync<BookListResponse>(request);
+        Books = response.Data.Books;
+    }
+    private async Task DeleteBook(int id)
+    {
+        var request = new GraphQLRequest
+            {
+                Query = @"
+                        mutation DeleteBook($id: Int!) {
+                            deleteBook(bookId: $id)
+                        }",
+                Variables = new { id = id }
+            };
+
+        var response = await GraphQLClient.SendMutationAsync<GraphQLResponse<bool>>(request);
+
+        if (response.Errors != null)
+        {
+            Message = $"Failed to add book. Error: {response.Errors.FirstOrDefault().Message}";
+        }
+        else
+        {
+            Message = $"Book #'{id}' delete successfully!";
+            await FetchBooks();
+        }
+    }
+
+    private void GotoEdit(int id)
+    {
+        Navigation.NavigateTo($"/edit-book/{id}");
+    }
+
+    public class BookListResponse
+    {
+        public List<Book> Books { get; set; }
+    }
+}

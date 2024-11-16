@@ -1,0 +1,100 @@
+﻿@page "/edit-book/{id:int}"
+@using GraphQL.Client.Abstractions
+@inject NavigationManager NavigationManager
+@inject IGraphQLClient GraphQLClient
+
+<h3>Edit Book - @Id</h3>
+
+@if (Book == null)
+{
+    <p>Loading book details...</p>
+}
+else
+{
+    <form>
+        <div class="mb-3">
+            <input placeholder="Book Name" @bind="Book.Title" required/>
+        </div>
+        <button type="button" @onclick="SaveChanges" class="btn btn-primary">Save</button>
+        <button type="button" @onclick="CancelEdit" class="btn btn-secondary">Cancel</button>
+    </form>
+}
+
+<p>@Message</p>
+
+@code {
+    [Parameter]
+    public int Id { get; set; } 
+
+    private Book Book;
+    private string Message;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadBookDetails();
+    }
+
+    private async Task LoadBookDetails()
+    {
+        var request = new GraphQLRequest
+        {
+            Query = @"
+                query ($id: Int!) {
+                    bookById(id: $id) {
+                        id
+                        title
+                        authorId
+                        authorName
+                    }
+                }",
+            Variables = new { id = Id }
+        };
+
+        var response = await GraphQLClient.SendQueryAsync<BookResponse>(request);
+        Book = response.Data.bookById;
+    }
+
+    private async Task SaveChanges()
+    {
+        var request = new GraphQLRequest
+        {
+            Query = @"
+                mutation ($id: Int!, $title: String!, $authorId: Int!, $authorName: String!) {
+                    updateBook(book:  {
+                                id: $id
+                                title: $title
+                                authorId: $authorId
+                                authorName: $authorName
+                            }) {
+                                    id
+                                    title
+                                    authorId
+                                    authorName
+                                }
+                }",
+            Variables = new { id = Id, title = Book.Title, authorId = Book.AuthorId, authorName = Book.AuthorName}
+        };
+
+        var response = await GraphQLClient.SendMutationAsync<GraphQLResponse<bool>>(request);
+
+        if (response.Errors == null)
+        {
+            Message = "Book updated successfully.";
+        }
+        else
+        {
+            Message = $"Failed to add Book. Error: {response.Errors.FirstOrDefault().Message}";
+        }
+    }
+
+    private void CancelEdit()
+    {
+        NavigationManager.NavigateTo("/books");
+    }
+
+
+    public class BookResponse
+    {
+        public Book bookById { get; set; }
+    }
+}

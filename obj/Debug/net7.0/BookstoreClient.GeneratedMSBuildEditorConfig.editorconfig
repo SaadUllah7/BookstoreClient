@@ -1,0 +1,61 @@
+is_global = true
+build_property.TargetFramework = net7.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = 
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = false
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = browser
+build_property.RootNamespace = BookstoreClient
+build_property.RootNamespace = BookstoreClient
+build_property.ProjectDir = /Users/saadullah/Projects/POCGraphQLWithBlazor/BookstoreClient/
+build_property.RazorLangVersion = 7.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = /Users/saadullah/Projects/POCGraphQLWithBlazor/BookstoreClient
+build_property._RazorSourceGeneratorDebug = 
+
+[/Users/saadullah/Projects/POCGraphQLWithBlazor/BookstoreClient/App.razor]
+build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/saadullah/Projects/POCGraphQLWithBlazor/BookstoreClient/Pages/Authors/Add.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQXV0aG9ycy9BZGQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/saadullah/Projects/POCGraphQLWithBlazor/BookstoreClient/Pages/Authors/Edit.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQXV0aG9ycy9FZGl0LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/saadullah/Projects/POCGraphQLWithBlazor/BookstoreClient/Pages/Authors/List.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQXV0aG9ycy9MaXN0LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/saadullah/Projects/POCGraphQLWithBlazor/BookstoreClient/Pages/Books/Add.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQm9va3MvQWRkLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/saadullah/Projects/POCGraphQLWithBlazor/BookstoreClient/Pages/Books/Edit.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQm9va3MvRWRpdC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/saadullah/Projects/POCGraphQLWithBlazor/BookstoreClient/Pages/Books/List.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQm9va3MvTGlzdC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/saadullah/Projects/POCGraphQLWithBlazor/BookstoreClient/Pages/Index.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvSW5kZXgucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/saadullah/Projects/POCGraphQLWithBlazor/BookstoreClient/_Imports.razor]
+build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/saadullah/Projects/POCGraphQLWithBlazor/BookstoreClient/Shared/MainLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkL01haW5MYXlvdXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-t8itwmhxkn
+
+[/Users/saadullah/Projects/POCGraphQLWithBlazor/BookstoreClient/Shared/NavMenu.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkL05hdk1lbnUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-qo9boa46yt

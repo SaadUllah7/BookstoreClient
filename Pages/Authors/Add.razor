@@ -1,0 +1,62 @@
+﻿@page "/add-author"
+@using GraphQL.Client.Abstractions
+@inject IGraphQLClient GraphQLClient
+@inject NavigationManager Navigation
+
+<p style="cursor: pointer;color:blue" @onclick="BackToList"><b>Go back</b></p>
+<h3>Add Author</h3>
+<br/>
+<EditForm Model="@author" OnValidSubmit="AddAuthor">
+    <DataAnnotationsValidator />
+
+    <div class="mb-3">
+        <label for="title" class="form-label">Name</label>
+        <InputText id="title" class="form-control" @bind-Value="author.Name" />
+        <ValidationMessage For="@(() => author.Name)" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</EditForm>
+<p>@Message</p>
+
+@code {
+    public Author author {get; set;} = new Author();
+    private string Message = string.Empty;
+
+    private async Task AddAuthor()
+    {
+        if(string.IsNullOrEmpty(author.Name)){
+            return;
+        }
+        var request = new GraphQLRequest
+        {
+            Query = @"
+                mutation AddAuthor($name: String!) {
+                    addAuthor(name: $name) {
+                        id
+                        name
+                    }
+                }",
+            Variables = new { name = author.Name }
+        };
+
+        var response = await GraphQLClient.SendMutationAsync<AddResponse>(request);
+
+        if (response.Errors != null)
+        {
+            Message = $"Failed to add Author. Error: {response.Errors.FirstOrDefault().Message}";
+        }
+        else
+        {
+            Message = $"Author '{response.Data.addAuthor.Name}' added successfully!";
+        }
+    }
+
+    private void BackToList(){
+        Navigation.NavigateTo("/authors");
+    }
+    public class AddResponse
+    {
+        public Author addAuthor { get; set; }
+    }
+}

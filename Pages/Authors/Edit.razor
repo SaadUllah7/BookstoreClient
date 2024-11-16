@@ -1,0 +1,94 @@
+﻿@page "/edit-author/{id:int}"
+@using GraphQL.Client.Abstractions
+@inject NavigationManager NavigationManager
+@inject IGraphQLClient GraphQLClient
+
+<h3>Edit Author - @Id</h3>
+
+@if (Author == null)
+{
+    <p>Loading author details...</p>
+}
+else
+{
+    <form>
+        <div class="mb-3">
+            <input placeholder="Author Name" @bind="Author.Name" required/>
+        </div>
+        <button type="button" @onclick="SaveChanges" class="btn btn-primary">Save</button>
+        <button type="button" @onclick="CancelEdit" class="btn btn-secondary">Cancel</button>
+    </form>
+}
+
+<p>@Message</p>
+
+@code {
+    [Parameter]
+    public int Id { get; set; } 
+
+    private Author Author;
+    private string Message;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAuthorDetails();
+    }
+
+    private async Task LoadAuthorDetails()
+    {
+        var request = new GraphQLRequest
+        {
+            Query = @"
+                query ($id: Int!) {
+                    authorById(id: $id) {
+                        id
+                        name
+                    }
+                }",
+            Variables = new { id = Id }
+        };
+
+        var response = await GraphQLClient.SendQueryAsync<AuthorResponse>(request);
+        Author = response.Data.authorById;
+    }
+
+    private async Task SaveChanges()
+    {
+        var request = new GraphQLRequest
+        {
+            Query = @"
+                mutation ($id: Int!, $name: String!) {
+                    updateAuthor(author:  {
+                                id: $id
+                                name: $name
+                            }) {
+                                    id
+                                    name
+                                }
+                }",
+            Variables = new { id = Id, name = Author.Name}
+        };
+
+        var response = await GraphQLClient.SendMutationAsync<GraphQLResponse<bool>>(request);
+
+        if (response.Errors == null)
+        {
+            Message = "Author updated successfully.";
+        }
+        else
+        {
+            Message = $"Failed to add Author. Error: {response.Errors.FirstOrDefault().Message}";
+        }
+    }
+
+    private void CancelEdit()
+    {
+        NavigationManager.NavigateTo("/authors");
+    }
+    
+
+    public class AuthorResponse
+    {
+        public Author authorById { get; set; }
+    }
+}

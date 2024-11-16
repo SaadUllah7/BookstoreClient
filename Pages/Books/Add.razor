@@ -1,0 +1,101 @@
+﻿@page "/add-book"
+@using GraphQL.Client.Abstractions
+@using System.ComponentModel.DataAnnotations
+@inject IGraphQLClient GraphQLClient
+@inject NavigationManager Navigation
+
+<p style="cursor: pointer;color:blue" @onclick="BackToList"><b>Go back</b></p>
+<h3>Add Book</h3>
+<br/>
+<EditForm Model="@book" OnValidSubmit="AddBook">
+    <DataAnnotationsValidator />
+
+    <div class="mb-3">
+        <label for="title" class="form-label">Title</label>
+        <InputText id="title" class="form-control" @bind-Value="book.Title" />
+        <ValidationMessage For="@(() => book.Title)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="genre" class="form-label">Author Id</label>
+        <InputNumber id="genre" class="form-control" @bind-Value="book.AuthorId" />
+        <ValidationMessage For="@(() => book.AuthorId)" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</EditForm>
+
+<p>@Message</p>
+
+@code {
+    public Book book {get;set;} = new Book();
+    private string Message = string.Empty;
+
+    private async Task AddBook()
+    {
+        if(string.IsNullOrEmpty(book.Title)){
+            return;
+        }
+        var request = new GraphQLRequest
+        {
+            Query = @"
+                mutation AddBook($title: String!, $authorId: Int!) {
+                    addBook(title: $title, authorId: $authorId) {
+                        id
+                        title
+                        authorName
+                    }
+                }",
+            Variables = new { title = book.Title, authorId = book.AuthorId }
+        };
+
+        var response = await GraphQLClient.SendMutationAsync<AddResponse>(request);
+
+        if (response.Errors != null)
+        {
+            Message = $"Failed to add book. Error: {response.Errors.FirstOrDefault().Message}";
+        }
+        else
+        {
+            Message = $"Book '{response.Data.addBook.Title}' added successfully!";
+            await Task.Delay(2000);
+            Navigation.NavigateTo("/books");
+        }
+    }
+
+    @* private async Task UpdateBook(Book book)
+    {
+        var request = new GraphQLRequest
+        {
+            Query = @"
+                mutation UpdateBook($book: Book!) {
+                    updateBook(book: $book) {
+                        id
+                        title
+                        authorName
+                    }
+                }",
+            Variables = new { book = book }
+        };
+
+        var response = await GraphQLClient.SendMutationAsync<AddResponse>(request);
+
+        if (response.Errors != null)
+        {
+            Message = $"Failed to add book. Error: {response.Errors.FirstOrDefault().Message}";
+        }
+        else
+        {
+            Message = $"Book '{response.Data.addBook.Title}' added successfully!";
+            await Task.Delay(2000);
+            Navigation.NavigateTo("/books");
+        }
+    } *@
+    private void BackToList(){
+        Navigation.NavigateTo("/books");
+    }
+    public class AddResponse
+    {
+        public Book addBook { get; set; }
+    }
+}
